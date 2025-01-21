@@ -1,0 +1,37 @@
+service: code
+
+frameworkVersion: "4"  # Ensures compatibility with Serverless 4.x
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-west-2  # Specify the AWS region
+  memorySize: 128    # Optional: Set memory size (default: 1024MB)
+  timeout: 10        # Optional: Set function timeout (default: 6 seconds)
+  logs:
+    httpApi: true    #Enable cloudwatch logs      
+  environment:
+    NODE_ENV: production  # Example environment variable
+    DB_HOST: your-database-host
+    DB_USER: your-database-user
+    DB_PASSWORD: your-database-password
+
+functions:
+  app:
+    handler: build/code/src/lamda.handler  # Path to your Lambda function
+    events:
+      - httpApi:
+          path: /
+          method: ANY
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+
+package:
+  exclude:
+    - node_modules/aws-sdk/**  # Exclude AWS SDK (pre-installed in Lambda)
+    - .git/**                  # Exclude Git repository
+    - .vscode/**               # Exclude VSCode settings
+    - tests/**                 # Exclude test files
+plugins:
+  serverless-express
