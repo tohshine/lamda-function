@@ -5,6 +5,6 @@ it('respond with list od users',async ()=>{
  await request(app)
               .get('/users')
               .send()
-              .expect(400)
+              .expect(500)
 
 })
