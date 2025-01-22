@@ -1,0 +1,69 @@
+name: CI/CD for Lambda
+
+on:
+  push:
+    branches:
+      - main  # Triggers for production
+      - staging  # Triggers for staging
+  pull_request:
+    branches:
+      - staging  # Test pull requests targeting staging branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      #build dependences for lamda typscript project
+      - name: install dependences for lamda typescript project
+        working-directory: code
+        run: npm install 
+
+      - name: Install Serverless Framework
+        run: npm install -g serverless
+
+        # Step 4: Build the TypeScript project
+      - name: Build TypeScript
+        working-directory: code
+        run: npm run build  
+
+      - name: Deploy to AWS Lambda
+        working-directory: code
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: "eu-west-2"
+        run: |
+          if [[ $GITHUB_REF == refs/heads/main ]]; then
+            sls deploy --stage production
+          elif [[ $GITHUB_REF == refs/heads/staging ]]; then
+            sls deploy --stage staging
+          fi

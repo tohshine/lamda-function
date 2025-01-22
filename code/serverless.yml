@@ -6,6 +6,7 @@ provider:
   name: aws
   runtime: nodejs18.x
   region: eu-west-2  # Specify the AWS region
+  stage: ${opt:stage,'dev'}
   memorySize: 128    # Optional: Set memory size (default: 1024MB)
   timeout: 10        # Optional: Set function timeout (default: 6 seconds)
   logs:
@@ -19,6 +20,8 @@ provider:
 functions:
   app:
     handler: build/code/src/lamda.handler  # Path to your Lambda function
+    environment:
+      STAGE: ${self:provider.stage}
     events:
       - httpApi:
           path: /
@@ -26,6 +29,12 @@ functions:
       - httpApi:
           path: /{proxy+}
           method: ANY
+custom:
+  stages:
+    staging:
+      region: us-east-1
+    production:
+      region: eu-west-2          
 
 package:
   exclude:
