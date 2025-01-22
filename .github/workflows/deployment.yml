@@ -33,7 +33,7 @@ jobs:
         # Step 4: Build the TypeScript project
       - name: Build TypeScript
         working-directory: code
-        run: npm run build  
+        run: npm run prod:server  
 
       - name: Deploy to AWS Lambda
         working-directory: code
