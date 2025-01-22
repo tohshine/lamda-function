@@ -29,7 +29,7 @@ jobs:
 
       - name: Install Serverless Framework
         run: npm install -g serverless
-        
+
        # Step 5: Authenticate with Serverless Framework
       - name: Authenticate with Serverless Framework
         env:
@@ -45,6 +45,7 @@ jobs:
       - name: Deploy to AWS Lambda
         working-directory: code
         env:
+          SLS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: "eu-west-2"
