@@ -34,6 +34,7 @@ jobs:
       - name: Authenticate with Serverless Framework
         env:
           SLS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+        run: npx serverless config credentials --provider aws --key $SLS_ACCESS_KEY  
         run: |
           echo "Serverless Framework authenticated successfully"  
 
