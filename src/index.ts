@@ -8,7 +8,7 @@ app.use(express.json())
 
 app.get('/users',(req:Request,res:Response)=>{
 
-    res.json({message:'List of users'})
+    res.json({message:'List of user'})
 })
 
 export {app}
