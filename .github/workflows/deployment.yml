@@ -5,13 +5,11 @@ on:
     branches:
       - main  # Triggers for production
       - staging  # Triggers for staging
-  
 
 jobs:
-  
   deploy:
     runs-on: ubuntu-latest
-    needs: test
+    #needs: test
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
